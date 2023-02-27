@@ -61,7 +61,7 @@ export default function Home() {
     };
 
     const handleNoteChange = async (changedNote: Note) => {
-        const response = await fetch("/api/notes/" + selectedNoteId, {
+        const response = await fetch("/api/notes/" + changedNote.id, {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -77,14 +77,14 @@ export default function Home() {
         const note = await response.json();
 
         await mutateCurrentNote(note);
-        if (notes !== undefined) {
-            await mutateNotes([...notes].map(n => n.id === note.id ? note : n));
-        }
     }
 
     const handleTitleChange = async (event: ChangeEvent<HTMLInputElement>) => {
         if (currentNote !== undefined) {
             await handleNoteChange({...currentNote, title: event.currentTarget.value});
+            if (notes !== undefined) {
+                await mutateNotes([...notes].map(n => n.id === currentNote.id ? currentNote : n));
+            }
         }
     };
 
