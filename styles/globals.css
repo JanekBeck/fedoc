@@ -14,7 +14,7 @@
     width: 300px;
     height: 100vh;
     overflow-y: auto;
-    background-color: var(--bs-gray-200) !important;
+    overflow-x: hidden
 }
 
 .home-textarea {
@@ -24,41 +24,45 @@
 }
 
 .sidebar-header {
-    background-color: var(--bs-gray-200) !important;
     position: sticky;
     top: 0;
     z-index: 1020;
-}
-
-.sidebar-search {
-    background-color: var(--bs-gray-200) !important;
-    border-color: var(--bs-gray-600) !important;
-}
-
-.sidebar-selected {
-    background-color: var(--bs-gray-400) !important;
 }
 
 .nav-list-ml {
     margin-left: 1rem;
 }
 
-.nav-list-btn {
-    min-height: 38px;
-}
-
-.nav-list-btn:hover {
-    border-color: var(--bs-gray-600) !important;
-}
-
 .nav-list-add {
-    display: none !important;
+    display: none;
+}
+
+.nav-list-add.active {
+    color: var(--bs-white);
+}
+
+.nav-list-btn {
+    background-color: var(--bs-dark);
+}
+
+.nav-list-btn:hover, .nav-list-btn:focus {
+    background-color: var(--bs-secondary);
+    color: var(--bs-white);
+}
+
+.nav-list-btn.active:hover, .nav-list-btn:focus {
+    color: var(--bs-white);
+}
+
+.nav-list-btn.active {
+    background-color: var(--bs-primary);
 }
 
 .nav-list-btn:hover .nav-list-add {
-    display: flex !important;
+    display: flex;
+    color: var(--bs-white);
 }
 
 #options-dropdown.dropdown-toggle::after {
-    display: none !important;
+    display: none;
 }

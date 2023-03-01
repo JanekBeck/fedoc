@@ -1,6 +1,5 @@
+import "@/styles/globals.scss"
 import "@/styles/globals.css"
-import "bootstrap/dist/css/bootstrap.css"
-import "bootstrap-icons/font/bootstrap-icons.css"
 import {SSRProvider} from "react-bootstrap";
 import type {AppProps} from "next/app"
 import Head from "next/head";

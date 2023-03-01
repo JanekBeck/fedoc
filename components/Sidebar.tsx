@@ -1,4 +1,4 @@
-import {FormControl, Modal} from "react-bootstrap";
+import {Button, FormControl, ListGroup, Modal} from "react-bootstrap";
 import {useState} from "react";
 import AddIcon from "bootstrap-icons/icons/plus-lg.svg"
 import SearchIcon from "bootstrap-icons/icons/search.svg"
@@ -18,12 +18,13 @@ export default function Sidebar(props: {
     const handleSearchShow = () => setShowSearch(true);
 
     return (
-        <div className="home-sidebar flex-shrink-0 p-3 pt-0">
-            <div className="sidebar-header d-flex gap-3 align-items-center py-3 mb-3 border-bottom">
+        <aside className="home-sidebar flex-shrink-0 bg-dark text-white">
+            <div className="sidebar-header bg-dark d-flex gap-3 align-items-center p-3 border-bottom border-secondary">
                 <span className="fs-5 fw-semibold">Fedoc</span>
-                <button type="button" className="btn w-100 text-start sidebar-search gap-2 d-flex align-items-center"
+                <button type="button"
+                        className="btn btn-outline-primary w-100 text-start sidebar-search gap-2 d-flex align-items-center"
                         onClick={handleSearchShow}>
-                    <SearchIcon/>
+                    <SearchIcon aria-hidden="true"/>
                     Search
                 </button>
                 <Modal className="mt-5" show={showSearch} onHide={handleSearchClose}>
@@ -37,15 +38,17 @@ export default function Sidebar(props: {
                     </Modal.Body>
                 </Modal>
             </div>
-            {props.rootNote != null && props.notes != null &&
-                <NoteNavList
-                    notes={props.notes}
-                    noteChildren={[props.rootNote]}
-                    selectedNoteId={props.selectedNoteId}
-                    onNoteSelectChange={props.onNoteSelectChange}
-                    onNoteAdd={props.onNoteAdd}/>
-            }
-        </div>
+            <nav className="px-3" aria-label="Notes navigation">
+                {props.rootNote != null && props.notes != null &&
+                    <NoteNavList
+                        notes={props.notes}
+                        noteChildren={[props.rootNote]}
+                        selectedNoteId={props.selectedNoteId}
+                        onNoteSelectChange={props.onNoteSelectChange}
+                        onNoteAdd={props.onNoteAdd}/>
+                }
+            </nav>
+        </aside>
     )
 }
 
@@ -58,23 +61,25 @@ function NoteNavList(props: {
     onNoteAdd: (parentId: number) => void
 }) {
     return (
-        <ul className={`list-unstyled fw-normal pb-1 ${props.className}`}>
+        <ListGroup as="ul" variant="flush" className={props.className}>
             {props.noteChildren.map(child => (
-                <li key={child.id}>
-                    <span aria-label="button"
-                          className={`btn nav-list-btn w-100 text-start text-nowrap d-flex gap-2
-                                       ${props.selectedNoteId === child.id ? "sidebar-selected" : ""}`}
-                          onClick={() => props.onNoteSelectChange(child.id)}>
+                <>
+                    <ListGroup.Item as="li"
+                                    key={child.id}
+                                    action
+                                    className="d-flex gap-2 nav-list-btn text-nowrap border-0 text-white"
+                                    active={props.selectedNoteId === child.id}
+                                    onClick={() => props.onNoteSelectChange(child.id)}>
                         {child.title}
-                        <span aria-label="button"
-                              className="btn btn-outline-dark nav-list-add border-0 py-0 px-1 align-items-center"
-                              onClick={(event) => {
-                                  event.stopPropagation();
-                                  props.onNoteAdd(child.id);
-                              }}>
-                            <AddIcon/>
-                        </span>
-                    </span>
+                        <Button variant="outline-dark"
+                                type="button"
+                                aria-label="Add child note"
+                                tabIndex={0}
+                                className="nav-list-add border-0 py-0 px-1 align-items-center"
+                                onClick={() => props.onNoteAdd(child.id)}>
+                            <AddIcon aria-hidden="true"/>
+                        </Button>
+                    </ListGroup.Item>
                     <NoteNavList
                         className="nav-list-ml"
                         notes={props.notes}
@@ -82,8 +87,8 @@ function NoteNavList(props: {
                         selectedNoteId={props.selectedNoteId}
                         onNoteSelectChange={props.onNoteSelectChange}
                         onNoteAdd={props.onNoteAdd}/>
-                </li>
+                </>
             ))}
-        </ul>
+        </ListGroup>
     );
 }

@@ -133,7 +133,7 @@ export default function Home() {
                     onNoteAdd={handleAddNote}/>
                 <main className="home-main">
                     <Container className="pt-3">
-                        <div className="border-bottom d-flex">
+                        <div className="border-bottom d-flex gap-3">
                             <FormControl className="border-0 fs-3"
                                          placeholder="Title..."
                                          disabled={isLoading}
@@ -143,9 +143,10 @@ export default function Home() {
                             <Dropdown>
                                 <Dropdown.Toggle variant="outline-dark"
                                                  className="border-0"
+                                                 aria-label="Options"
                                                  disabled={isLoading}
                                                  id="options-dropdown">
-                                    <ThreeDotsVerticalIcon/>
+                                    <ThreeDotsVerticalIcon width={20} height={20} aria-hidden="true"/>
                                 </Dropdown.Toggle>
 
                                 <Dropdown.Menu>
