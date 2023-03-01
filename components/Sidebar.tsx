@@ -7,10 +7,9 @@ import {fetcher} from "@/pages";
 
 export default function Sidebar(props: {
     selectedNoteId: number | null,
-    onNoteSelectChange: (noteId: number) => void,
-    onNoteAdd: (parentId: number) => void
+    onNoteSelectChange: (noteId: number) => void
 }) {
-    const {data: notes} = useSWR<Omit<Note, "content">[]>("/api/notes", fetcher);
+    const {data: notes, mutate: mutateNotes} = useSWR<Omit<Note, "content">[]>("/api/notes", fetcher);
 
     const rootNote = useMemo(() => notes?.find(n => n.parentId === null) ?? null, [notes]);
 
@@ -19,6 +18,26 @@ export default function Sidebar(props: {
             props.onNoteSelectChange(rootNote.id);
         }
     }, [props, rootNote]);
+
+    const handleAddNote = async (parentId: number) => {
+        const response = await fetch("/api/notes", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({parentId}),
+        });
+
+        if (!response.ok) {
+            // TODO: error handling
+            return;
+        }
+
+        const note = await response.json();
+
+        await mutateNotes();
+        props.onNoteSelectChange(note.id);
+    };
 
     return (
         <aside className="home-sidebar flex-shrink-0 bg-dark text-white">
@@ -30,7 +49,7 @@ export default function Sidebar(props: {
                         noteChildren={[rootNote]}
                         selectedNoteId={props.selectedNoteId}
                         onNoteSelectChange={props.onNoteSelectChange}
-                        onNoteAdd={props.onNoteAdd}/>
+                        onNoteAdd={handleAddNote}/>
                 }
             </nav>
         </aside>
