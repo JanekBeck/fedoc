@@ -1,15 +1,15 @@
 import Head from "next/head"
-import {Button, Container, Dropdown, FormControl, Modal, Placeholder} from "react-bootstrap";
+import {Container, FormControl} from "react-bootstrap";
 import Sidebar from "@/components/Sidebar";
-import {ChangeEvent, useEffect, useMemo, useState} from "react";
+import {ChangeEvent, useState} from "react";
 import useSWR from "swr"
-import ThreeDotsVerticalIcon from "bootstrap-icons/icons/three-dots-vertical.svg"
 import {Note} from "@prisma/client";
+import NoteOptions from "@/components/NoteOptions";
 
-const fetcher = (input: RequestInfo, init: RequestInit) => fetch(input, init).then((res) => res.json());
+export const fetcher = (input: RequestInfo, init: RequestInit) => fetch(input, init).then((res) => res.json());
 
 export default function Home() {
-    const [showOptions, setShowOptions] = useState(false);
+    const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
 
     const {
         data: notes,
@@ -17,16 +17,6 @@ export default function Home() {
         error,
         isLoading,
     } = useSWR<Omit<Note, "content">[]>("/api/notes", fetcher);
-
-    const rootNote = useMemo(() => notes?.find(n => n.parentId === null) ?? null, [notes]);
-
-    const [selectedNoteId, setSelectedNoteId] = useState<number | null>(null);
-
-    useEffect(() => {
-        if (selectedNoteId == null && rootNote != null) {
-            setSelectedNoteId(rootNote.id);
-        }
-    }, [selectedNoteId, rootNote]);
 
     const {
         data: currentNote,
@@ -39,7 +29,7 @@ export default function Home() {
     }
 
     const handleAddNote = async (parentId: number) => {
-        handleOptionsClose();
+        //handleOptionsClose();
 
         const response = await fetch("/api/notes", {
             method: "POST",
@@ -77,7 +67,7 @@ export default function Home() {
         const note = await response.json();
 
         await mutateCurrentNote(note);
-    }
+    };
 
     const handleTitleChange = async (event: ChangeEvent<HTMLInputElement>) => {
         if (currentNote !== undefined) {
@@ -94,13 +84,7 @@ export default function Home() {
         }
     };
 
-    const handleOptionsClose = () => setShowOptions(false);
-
-    const handleOptionsShow = () => setShowOptions(true);
-
     const handleDelete = async () => {
-        handleOptionsClose();
-
         const parentId = currentNote?.parentId;
 
         const response = await fetch("/api/notes/" + selectedNoteId, {
@@ -116,7 +100,7 @@ export default function Home() {
         if (parentId != null) {
             setSelectedNoteId(parentId);
         }
-    }
+    };
 
     return (
         <>
@@ -126,8 +110,6 @@ export default function Home() {
             </Head>
             <div className="home-layout">
                 <Sidebar
-                    rootNote={rootNote}
-                    notes={notes ?? null}
                     selectedNoteId={selectedNoteId}
                     onNoteSelectChange={setSelectedNoteId}
                     onNoteAdd={handleAddNote}/>
@@ -140,39 +122,10 @@ export default function Home() {
                                          value={currentNote?.title ?? ""}
                                          onChange={handleTitleChange}/>
 
-                            <Dropdown>
-                                <Dropdown.Toggle variant="outline-dark"
-                                                 className="border-0"
-                                                 aria-label="Options"
-                                                 disabled={isLoading}
-                                                 id="options-dropdown">
-                                    <ThreeDotsVerticalIcon width={20} height={20} aria-hidden="true"/>
-                                </Dropdown.Toggle>
-
-                                <Dropdown.Menu>
-                                    <Dropdown.Item as="button"
-                                                   onClick={handleOptionsShow}
-                                                   disabled={currentNote?.parentId === null}>
-                                        Delete
-                                    </Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
-                            <Modal show={showOptions} onHide={handleOptionsClose}>
-                                <Modal.Header closeButton>
-                                    <Modal.Title>Delete note</Modal.Title>
-                                </Modal.Header>
-                                <Modal.Body>
-                                    Do you really want to delete <span className="fw-bold">{currentNote?.title}</span>?
-                                </Modal.Body>
-                                <Modal.Footer>
-                                    <Button variant="secondary" onClick={handleOptionsClose}>
-                                        Close
-                                    </Button>
-                                    <Button variant="danger" onClick={handleDelete}>
-                                        Delete
-                                    </Button>
-                                </Modal.Footer>
-                            </Modal>
+                            <NoteOptions disabled={isLoading}
+                                         disabledDelete={currentNote?.parentId === null}
+                                         noteTitle={currentNote?.title ?? ""}
+                                         onDelete={handleDelete}/>
                         </div>
                         <FormControl as="textarea"
                                      className="border-0 home-textarea mt-1"
