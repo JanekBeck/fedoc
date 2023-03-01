@@ -29,8 +29,6 @@ export default function Home() {
     }
 
     const handleAddNote = async (parentId: number) => {
-        //handleOptionsClose();
-
         const response = await fetch("/api/notes", {
             method: "POST",
             headers: {
