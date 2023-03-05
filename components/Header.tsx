@@ -23,7 +23,7 @@ export default function Header(props: {
             </button>
             <Modal className="mt-5" show={showSearch} onHide={handleSearchClose}>
                 <Modal.Body>
-                    <Search onNoteSelectChange={props.onNoteSelectChange} onClosingModal={handleSearchClose}/>
+                    <Search onNoteSelectChange={props.onNoteSelectChange} onClose={handleSearchClose}/>
                 </Modal.Body>
             </Modal>
         </div>

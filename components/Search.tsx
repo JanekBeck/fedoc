@@ -1,7 +1,7 @@
 import { FormControl } from "react-bootstrap";
-import useSWR from "swr";
 import { Note } from "@prisma/client";
 import { ListGroup } from "react-bootstrap";
+import { SearchQueryResult, useSearchResultQuery } from "@/hooks/useSearchResultQuery";
 
 export const fetcher = (input: RequestInfo, init: RequestInit) =>
   fetch(input, init).then((res) => res.json());
@@ -27,21 +27,6 @@ function SearchResultList(props: {
   );
 }
 
-interface SearchQueryResult {
-  notes: Omit<Note, "content">[];
-  error: Error | undefined;
-  isLoading: boolean;
-}
-
-//TODO: implement proper search query backend
-function useSearchResultQuery(searchTerm: string): SearchQueryResult {
-  const { data, error, isLoading } = useSWR<Omit<Note, "content">[]>(
-    "/api/notes",
-    fetcher
-  );
-  return { notes: data?.slice(0, 5) ?? [], error: error, isLoading: isLoading };
-}
-
 export default function Search(props: {
   onClose: () => void;
   onNoteSelectChange: (noteId: number) => void;
@@ -51,7 +36,7 @@ export default function Search(props: {
     props.onClose();
   };
 
-  const searchResult = useSearchResultQuery("");
+  const searchResult: SearchQueryResult = useSearchResultQuery("");
 
   if (searchResult.error) {
     //TODO: error handling
