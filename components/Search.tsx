@@ -21,7 +21,7 @@ function createSearchResultList(
           className="d-flex gap-2 text-nowrap border-0 text-black"
           onClick={() => onNoteSelectChange(note.id)}
         >
-          {note?.title}
+          {note.title}
         </ListGroup.Item>
       ))}
     </ListGroup>
@@ -38,7 +38,7 @@ function useSearchResultQuery(searchTerm: String): Omit<Note, "content">[] {
 
   var result = notes ?? [];
 
-  if (result?.length > 5) {
+  if (result.length > 5) {
     result = result.slice(0, 5);
   }
   return result
