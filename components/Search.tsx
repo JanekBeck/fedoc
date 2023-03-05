@@ -19,7 +19,7 @@ function createSearchResultList(
           key={note.id.toString()}
           action
           className="d-flex gap-2 text-nowrap border-0 text-black"
-          onClick={() => onNoteSelectChange(note.id.valueOf())}
+          onClick={() => onNoteSelectChange(note.id)}
         >
           {note?.title}
         </ListGroup.Item>
