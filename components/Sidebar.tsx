@@ -41,7 +41,7 @@ export default function Sidebar(props: {
 
     return (
         <aside className="home-sidebar flex-shrink-0 bg-dark text-white">
-            <Header/>
+            <Header onNoteSelectChange={props.onNoteSelectChange}/>
             <nav className="px-3" aria-label="Notes navigation">
                 {rootNote != null && notes != null &&
                     <NoteNavList

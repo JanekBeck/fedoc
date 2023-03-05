@@ -3,7 +3,9 @@ import {useState} from "react";
 import SearchIcon from "bootstrap-icons/icons/search.svg"
 import Search from "@/components/Search";
 
-export default function Header() {
+export default function Header(props: {
+    onNoteSelectChange: (noteId: number) => void,
+}) {
     const [showSearch, setShowSearch] = useState(false);
 
     const handleSearchClose = () => setShowSearch(false);
@@ -21,9 +23,10 @@ export default function Header() {
             </button>
             <Modal className="mt-5" show={showSearch} onHide={handleSearchClose}>
                 <Modal.Body>
-                    <Search/>
+                    <Search onNoteSelectChange={props.onNoteSelectChange} onClosingModal={handleSearchClose}/>
                 </Modal.Body>
             </Modal>
         </div>
     )
 }
+
