@@ -6,19 +6,19 @@ import { ListGroup } from "react-bootstrap";
 export const fetcher = (input: RequestInfo, init: RequestInit) =>
   fetch(input, init).then((res) => res.json());
 
-function SearchResultList(
-  notes: Omit<Note, "content">[],
-  onNoteSelectChange: (noteId: number) => void
-): JSX.Element {
+function SearchResultList(props: {
+  notes: Omit<Note, "content">[];
+  onNoteSelectChange: (noteId: number) => void;
+}): JSX.Element {
   return (
     <ListGroup as="ul" variant="flush">
-      {notes.map((note) => (
+      {props.notes.map((note) => (
         <ListGroup.Item
           as="li"
           key={note.id}
           action
           className="d-flex gap-2 text-nowrap border-0 text-black"
-          onClick={() => onNoteSelectChange(note.id)}
+          onClick={() => props.onNoteSelectChange(note.id)}
         >
           {note.title}
         </ListGroup.Item>
@@ -61,7 +61,10 @@ export default function Search(props: {
     <>
       <FormControl placeholder="Search notes" autoFocus />
       <div className="m-5 text-center text-muted">
-        {SearchResultList(searchResult.notes, navigateToNote)}
+        <SearchResultList
+          notes={searchResult.notes}
+          onNoteSelectChange={navigateToNote}
+        />
       </div>
     </>
   );
