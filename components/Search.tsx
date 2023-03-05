@@ -3,9 +3,6 @@ import { Note } from "@prisma/client";
 import { ListGroup } from "react-bootstrap";
 import { SearchQueryResult, useSearchResultQuery } from "@/hooks/useSearchResultQuery";
 
-export const fetcher = (input: RequestInfo, init: RequestInit) =>
-  fetch(input, init).then((res) => res.json());
-
 function SearchResultList(props: {
   notes: Omit<Note, "content">[];
   onNoteSelectChange: (noteId: number) => void;
