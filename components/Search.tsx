@@ -10,9 +10,6 @@ function createSearchResultList(
   notes: Omit<Note, "content">[],
   onNoteSelectChange: (noteId: number) => void
 ): JSX.Element | JSX.Element[] {
-  if (notes?.length > 5) {
-    notes = notes.slice(0, 5);
-  }
 
   return (
     <ListGroup as="ul" variant="flush">
@@ -38,7 +35,13 @@ function useSearchResultQuery(searchTerm: String): Omit<Note, "content">[] {
     "/api/notes",
     fetcher
   );
-  return notes ?? [];
+
+  var result = notes ?? [];
+
+  if (result?.length > 5) {
+    result = result.slice(0, 5);
+  }
+  return result
 }
 
 export default function Search(props: {
