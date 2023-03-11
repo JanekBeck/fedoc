@@ -1,10 +1,30 @@
 import { FormControl } from "react-bootstrap";
-import { Note } from "@prisma/client";
 import { ListGroup } from "react-bootstrap";
-import { SearchQueryResult, useSearchResultQuery } from "@/hooks/useSearchResultQuery";
+import {
+  SearchQueryResult,
+  useSearchResultQuery,
+} from "@/hooks/useSearchResultQuery";
+import { useState } from "react";
+import { NotePreview } from "@/pages/api/notes/search";
+
+function HighlightedText(props: { text: string, textToHighlight: string }): JSX.Element {
+  const textArray = props.text.split(props.textToHighlight);
+  return (
+    <span>
+      {textArray.map((item, index) => (
+        <p style={{display: "inline"}} key={index}>
+          {item}
+          {index !== textArray.length - 1 && (
+            <mark>{props.textToHighlight}</mark>
+          )}
+        </p>
+      ))}
+    </span>
+);
+}
 
 function SearchResultList(props: {
-  notes: Omit<Note, "content">[];
+  notes: NotePreview[];
   onNoteSelectChange: (noteId: number) => void;
 }): JSX.Element {
   return (
@@ -14,10 +34,14 @@ function SearchResultList(props: {
           as="li"
           key={note.id}
           action
-          className="d-flex gap-2 text-nowrap border-0 text-black"
+          className="d-flex gap-2 border-0 text-black"
           onClick={() => props.onNoteSelectChange(note.id)}
         >
-          {note.title}
+          <div className="display: block">
+            <HighlightedText text={note.title} textToHighlight={note.searchTerm}/>
+            <br/>
+            <HighlightedText text={note.content} textToHighlight={note.searchTerm}/>
+          </div>
         </ListGroup.Item>
       ))}
     </ListGroup>
@@ -33,7 +57,8 @@ export default function Search(props: {
     props.onClose();
   };
 
-  const searchResult: SearchQueryResult = useSearchResultQuery("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const searchResult: SearchQueryResult = useSearchResultQuery(searchTerm);
 
   if (searchResult.error) {
     //TODO: error handling
@@ -41,8 +66,13 @@ export default function Search(props: {
 
   return (
     <>
-      <FormControl placeholder="Search notes" autoFocus />
-      <div className="m-5 text-center text-muted">
+      <FormControl
+        onChange={(evt) => {
+          setSearchTerm(evt.target.value)}}
+        placeholder="Search notes"
+        autoFocus
+      />
+      <div className="m-5 text-muted">
         <SearchResultList
           notes={searchResult.notes}
           onNoteSelectChange={navigateToNote}
