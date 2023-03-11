@@ -37,7 +37,7 @@ function SearchResultList(props: {
           className="d-flex gap-2 border-0 text-black"
           onClick={() => props.onNoteSelectChange(note.id)}
         >
-          <div className="display: block">
+          <div>
             <HighlightedText text={note.title} textToHighlight={note.searchTerm}/>
             <br/>
             <HighlightedText text={note.content} textToHighlight={note.searchTerm}/>
