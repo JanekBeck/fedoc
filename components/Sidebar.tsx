@@ -2,7 +2,7 @@ import {Note} from "@prisma/client";
 import Header from "@/components/Header";
 import {NoteNavList} from "@/components/NoteNavList";
 import useSWR from "swr";
-import {useEffect, useMemo} from "react";
+import {useMemo} from "react";
 import {fetcher} from "@/pages";
 
 export default function Sidebar(props: {
@@ -13,11 +13,9 @@ export default function Sidebar(props: {
 
     const rootNote = useMemo(() => notes?.find(n => n.parentId === null) ?? null, [notes]);
 
-    useEffect(() => {
-        if (props.selectedNoteId == null && rootNote != null) {
-            props.onNoteSelectChange(rootNote.id);
-        }
-    }, [props, rootNote]);
+    if (props.selectedNoteId == null && rootNote != null) {
+        props.onNoteSelectChange(rootNote.id);
+    }
 
     const handleAddNote = async (parentId: number) => {
         const response = await fetch("/api/notes", {

@@ -1,6 +1,7 @@
 import {Note} from "@prisma/client";
 import {Button, ListGroup} from "react-bootstrap";
 import AddIcon from "bootstrap-icons/icons/plus-lg.svg";
+import {Fragment} from "react";
 
 export function NoteNavList(props: {
     className?: string,
@@ -13,9 +14,8 @@ export function NoteNavList(props: {
     return (
         <ListGroup as="ul" variant="flush" className={props.className}>
             {props.noteChildren.map(child => (
-                <>
+                <Fragment key={child.id}>
                     <ListGroup.Item as="li"
-                                    key={child.id}
                                     action
                                     className="d-flex gap-2 nav-list-btn text-nowrap border-0 text-white"
                                     active={props.selectedNoteId === child.id}
@@ -37,7 +37,7 @@ export function NoteNavList(props: {
                         selectedNoteId={props.selectedNoteId}
                         onNoteSelectChange={props.onNoteSelectChange}
                         onNoteAdd={props.onNoteAdd}/>
-                </>
+                </Fragment>
             ))}
         </ListGroup>
     );

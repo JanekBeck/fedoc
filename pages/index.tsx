@@ -43,11 +43,12 @@ export default function Home() {
 
     const handleTitleChange = async (title: string) => {
         if (notes !== undefined) {
-            await mutateNotes([...notes].map(n => {
+            await mutateNotes(notes.map(n => {
                 if (n.id === selectedNoteId) {
-                    n.title = title;
+                    return {...n, title}
+                } else {
+                    return n;
                 }
-                return n;
             }));
         }
     };
