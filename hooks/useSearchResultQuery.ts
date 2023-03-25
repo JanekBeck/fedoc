@@ -1,17 +1,17 @@
-
 import useSWR from "swr";
 import { Note } from "@prisma/client";
+import {fetcher} from "@/lib/fetcher";
+import {NotePreview} from "@/interfaces/notePreview";
 
 export interface SearchQueryResult {
-    notes: Omit<Note, "content">[];
+    notes: NotePreview[];
     error: Error | undefined;
     isLoading: boolean;
 }
 
 //TODO: implement proper search query backend
 export function useSearchResultQuery(searchTerm: string): SearchQueryResult {
-    const fetcher = (input: RequestInfo, init: RequestInit) => fetch(input, init).then((res) => res.json());
-    const { data, error, isLoading } = useSWR<Omit<Note, "content">[]>(
+    const { data, error, isLoading } = useSWR<NotePreview[]>(
         "/api/notes",
         fetcher
     );

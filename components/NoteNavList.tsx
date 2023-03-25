@@ -1,12 +1,12 @@
-import {Note} from "@prisma/client";
 import {Button, ListGroup} from "react-bootstrap";
 import AddIcon from "bootstrap-icons/icons/plus-lg.svg";
 import {Fragment} from "react";
+import {NotePreview} from "@/interfaces/notePreview";
 
 export function NoteNavList(props: {
     className?: string,
-    notes: Omit<Note, "content">[],
-    noteChildren: Omit<Note, "content">[],
+    notes: NotePreview[],
+    noteChildren: NotePreview[],
     selectedNoteId: number | null,
     onNoteSelectChange: (noteId: number) => void,
     onNoteAdd: (parentId: number) => void

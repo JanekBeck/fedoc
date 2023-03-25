@@ -1,15 +1,17 @@
-import {Note} from "@prisma/client";
 import Header from "@/components/Header";
 import {NoteNavList} from "@/components/NoteNavList";
-import useSWR from "swr";
 import {useMemo} from "react";
-import {fetcher} from "@/pages";
+import {Offcanvas} from "react-bootstrap";
+import {useNotes} from "@/hooks/useNotes";
 
 export default function Sidebar(props: {
+    show: boolean,
+    onHide: () => void,
     selectedNoteId: number | null,
-    onNoteSelectChange: (noteId: number) => void
+    onNoteSelectChange: (noteId: number) => void,
+    onNoteAdd: (parentId: number) => void,
 }) {
-    const {data: notes, mutate: mutateNotes} = useSWR<Omit<Note, "content">[]>("/api/notes", fetcher);
+    const {notes} = useNotes();
 
     const rootNote = useMemo(() => notes?.find(n => n.parentId === null) ?? null, [notes]);
 
@@ -17,39 +19,26 @@ export default function Sidebar(props: {
         props.onNoteSelectChange(rootNote.id);
     }
 
-    const handleAddNote = async (parentId: number) => {
-        const response = await fetch("/api/notes", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({parentId}),
-        });
-
-        if (!response.ok) {
-            // TODO: error handling
-            return;
-        }
-
-        const note = await response.json();
-
-        await mutateNotes();
-        props.onNoteSelectChange(note.id);
-    };
-
     return (
-        <aside className="home-sidebar flex-shrink-0 bg-dark text-white">
-            <Header onNoteSelectChange={props.onNoteSelectChange}/>
-            <nav className="px-3" aria-label="Notes navigation">
-                {rootNote != null && notes != null &&
-                    <NoteNavList
-                        notes={notes}
-                        noteChildren={[rootNote]}
-                        selectedNoteId={props.selectedNoteId}
-                        onNoteSelectChange={props.onNoteSelectChange}
-                        onNoteAdd={handleAddNote}/>
-                }
-            </nav>
+        <aside className="home-sidebar bg-dark text-white">
+            <Offcanvas show={props.show} responsive="sm" onHide={props.onHide}>
+                <Offcanvas.Header className="bg-dark text-white" closeButton closeVariant="white">
+                    <Offcanvas.Title/>
+                </Offcanvas.Header>
+                <Offcanvas.Body className="d-block home-sidebar bg-dark text-white">
+                    <Header onNoteSelectChange={props.onNoteSelectChange}/>
+                    <nav className="px-3" aria-label="Notes navigation">
+                        {rootNote != null && notes != null &&
+                            <NoteNavList
+                                notes={notes}
+                                noteChildren={[rootNote]}
+                                selectedNoteId={props.selectedNoteId}
+                                onNoteSelectChange={props.onNoteSelectChange}
+                                onNoteAdd={props.onNoteAdd}/>
+                        }
+                    </nav>
+                </Offcanvas.Body>
+            </Offcanvas>
         </aside>
     )
 }

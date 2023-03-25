@@ -7,6 +7,7 @@ export default function NoteOptions(props: {
     disabledDelete: boolean,
     noteTitle: string,
     onDelete: () => void,
+    onAddChildNote: () => void,
 }) {
     const [showOptions, setShowOptions] = useState(false);
 
@@ -31,6 +32,10 @@ export default function NoteOptions(props: {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
+                    <Dropdown.Item as="button"
+                                   onClick={props.onAddChildNote}>
+                        Add child note
+                    </Dropdown.Item>
                     <Dropdown.Item as="button"
                                    onClick={handleOptionsShow}
                                    disabled={props.disabledDelete}>
