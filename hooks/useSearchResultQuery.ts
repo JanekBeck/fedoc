@@ -1,9 +1,8 @@
-
-import { NotePreview } from "@/pages/api/notes/search";
 import useSWR from "swr";
+import { NoteSearchPreview } from "@/pages/api/notes/search";
 
 export interface SearchQueryResult {
-    notes: NotePreview[];
+    notes: NoteSearchPreview[];
     error: Error | undefined;
     isLoading: boolean;
 }
@@ -11,7 +10,7 @@ export interface SearchQueryResult {
 export function useSearchResultQuery(searchTerm: string): SearchQueryResult {
     const fetcher = (input: RequestInfo, init: RequestInit) => fetch(input, init).then((res) => res.json());
 
-    const {data, error, isLoading} = useSWR<NotePreview[]>(
+    const {data, error, isLoading} = useSWR<NoteSearchPreview[]>(
         "/api/notes/search?searchTerm=" + searchTerm ,
         fetcher
     );

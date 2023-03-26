@@ -1,15 +1,18 @@
-import {FormControl} from "react-bootstrap";
+import {Button, FormControl} from "react-bootstrap";
 import NoteOptions from "@/components/NoteOptions";
 import {Note} from "@prisma/client";
 import {ChangeEvent} from "react";
 import useSWR from "swr";
-import {fetcher} from "@/pages";
+import MenuIcon from "bootstrap-icons/icons/list.svg"
+import {fetcher} from "@/lib/fetcher";
 
 export default function Editor(props: {
     selectedNoteId: number | null,
     disabled: boolean,
     onDelete: () => void,
-    onTitleChange: (title: string) => void
+    onTitleChange: (title: string) => void,
+    onNotesOpen: () => void,
+    onAddChildNote: () => void,
 }) {
     const {
         data: currentNote,
@@ -51,6 +54,9 @@ export default function Editor(props: {
     return (
         <>
             <div className="border-bottom d-flex gap-3">
+                <Button variant="outline-dark" className="d-sm-none border-0" onClick={props.onNotesOpen}>
+                    <MenuIcon width={20} height={20} aria-hidden="true"/>
+                </Button>
                 <FormControl className="border-0 fs-3"
                              placeholder="Title..."
                              disabled={props.disabled}
@@ -60,7 +66,8 @@ export default function Editor(props: {
                 <NoteOptions disabled={props.disabled}
                              disabledDelete={currentNote?.parentId === null}
                              noteTitle={currentNote?.title ?? ""}
-                             onDelete={props.onDelete}/>
+                             onDelete={props.onDelete}
+                             onAddChildNote={props.onAddChildNote}/>
             </div>
             <FormControl as="textarea"
                          className="border-0 home-textarea mt-1"

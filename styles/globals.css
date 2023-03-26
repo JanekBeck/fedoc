@@ -1,8 +1,24 @@
-.home-layout {
-    display: grid;
-    grid-template-areas: "sidebar main";
-    grid-template-columns: 1fr 5fr;
-    gap: 1rem;
+/* Small devices (landscape phones, 576px and up) */
+@media (min-width: 576px) {
+    .home-layout {
+        display: grid;
+        grid-template-areas: "sidebar main";
+        grid-template-columns: 1fr 5fr;
+        gap: 1rem;
+    }
+
+    .home-sidebar {
+        width: 300px;
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden
+    }
+
+    .sidebar-header {
+        position: sticky;
+        top: 0;
+        z-index: 1020;
+    }
 }
 
 .home-main {
@@ -11,22 +27,12 @@
 
 .home-sidebar {
     grid-area: sidebar;
-    width: 300px;
-    height: 100vh;
-    overflow-y: auto;
-    overflow-x: hidden
 }
 
 .home-textarea {
     box-shadow: none !important;
     height: calc(100vh - 5rem);
     resize: none;
-}
-
-.sidebar-header {
-    position: sticky;
-    top: 0;
-    z-index: 1020;
 }
 
 .nav-list-ml {

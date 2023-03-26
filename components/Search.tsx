@@ -1,11 +1,11 @@
-import { FormControl } from "react-bootstrap";
-import { ListGroup } from "react-bootstrap";
+import {FormControl} from "react-bootstrap";
+import {ListGroup} from "react-bootstrap";
 import {
   SearchQueryResult,
   useSearchResultQuery,
 } from "@/hooks/useSearchResultQuery";
 import { useState } from "react";
-import { NotePreview } from "@/pages/api/notes/search";
+import { NoteSearchPreview } from "@/pages/api/notes/search";
 
 function HighlightedText(props: { text: string, textToHighlight: string }): JSX.Element {
   const textArray = props.text.split(props.textToHighlight);
@@ -24,7 +24,7 @@ function HighlightedText(props: { text: string, textToHighlight: string }): JSX.
 }
 
 function SearchResultList(props: {
-  notes: NotePreview[];
+  notes: NoteSearchPreview[];
   onNoteSelectChange: (noteId: number) => void;
 }): JSX.Element {
   return (
@@ -49,20 +49,20 @@ function SearchResultList(props: {
 }
 
 export default function Search(props: {
-  onClose: () => void;
-  onNoteSelectChange: (noteId: number) => void;
+    onClose: () => void;
+    onNoteSelectChange: (noteId: number) => void;
 }) {
-  const navigateToNote = (noteId: number) => {
-    props.onNoteSelectChange(noteId);
-    props.onClose();
-  };
+    const navigateToNote = (noteId: number) => {
+        props.onNoteSelectChange(noteId);
+        props.onClose();
+    };
 
   const [searchTerm, setSearchTerm] = useState("");
   const searchResult: SearchQueryResult = useSearchResultQuery(searchTerm);
 
-  if (searchResult.error) {
-    //TODO: error handling
-  }
+    if (searchResult.error) {
+        //TODO: error handling
+    }
 
   return (
     <>

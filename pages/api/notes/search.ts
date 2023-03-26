@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { Note } from "@prisma/client";
 
 
-export interface NotePreview {
+export interface NoteSearchPreview {
     id: number
     title: string
     content: string
@@ -13,7 +13,7 @@ export interface NotePreview {
 const TITLE_LIMIT: number = 50
 const CONTENT_LIMIT: number = 100
 
-function convertToNotePreview(notes: Note[], searchTerm: string): NotePreview[] {
+function convertToNotePreview(notes: Note[], searchTerm: string): NoteSearchPreview[] {
     return notes.map(note => {
         return { id: note.id, title: note.title.substring(0, TITLE_LIMIT), content: note.content.substring(0, CONTENT_LIMIT), searchTerm: searchTerm }
     })
