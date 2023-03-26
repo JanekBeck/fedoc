@@ -20,10 +20,11 @@ function convertToNotePreview(notes: Note[], searchTerm: string): NotePreview[] 
 }
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-    var searchTerm = req.query.searchTerm as string
-    if(!searchTerm){
-        searchTerm = "*"
+    let searchTerm = "*"
+    if (req.query.searchTerm && typeof req.query.searchTerm === "string") {
+        searchTerm = req.query.searchTerm
     }
+
     try {
         switch (req.method) {
             case "GET": {

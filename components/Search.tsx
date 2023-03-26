@@ -12,7 +12,7 @@ function HighlightedText(props: { text: string, textToHighlight: string }): JSX.
   return (
     <span>
       {textArray.map((item, index) => (
-        <p style={{display: "inline"}} key={index}>
+        <p className="d-inline" key={index}>
           {item}
           {index !== textArray.length - 1 && (
             <mark>{props.textToHighlight}</mark>
