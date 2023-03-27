@@ -14,10 +14,10 @@ function convertToNotePreview(notes: Note[], searchTerm: string): NoteSearchPrev
 }
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-    const searchTermIsNotEmpty = req.query.searchTerm
-    let searchTerm = undefined
-    if (searchTermIsNotEmpty && typeof req.query.searchTerm === "string") {
-        searchTerm = req.query.searchTerm
+    const {searchTerm} = req.query;
+    if (typeof searchTerm !== "string") {
+        res.status(400).json({error: "searchTerm has wrong type"});
+        return;
     }
 
     try {
@@ -40,7 +40,7 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                     },
                 })
 
-                res.json(convertToNotePreview(myNotes, searchTerm ?? ""));
+                res.json(convertToNotePreview(myNotes, searchTerm));
                 break;
             }
         }

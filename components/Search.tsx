@@ -1,9 +1,7 @@
-import { FormControl } from "react-bootstrap";
-import { ListGroup } from "react-bootstrap";
+import { FormControl, ListGroup } from "react-bootstrap";
 import {useSearchResultQuery} from "@/hooks/useSearchResultQuery";
 import { useState } from "react";
 import { NoteSearchPreview } from "@/interfaces/noteSearchPreview";
-import { SearchQueryResult } from "@/interfaces/searchQueryResult";
 
 function HighlightedText(props: {
   text: string;
@@ -73,7 +71,9 @@ export default function Search(props: {
 
     return (
         <>
-            <FormControl  onChange={(evt) => setSearchTerm(evt.target.value)} placeholder="Search notes" autoFocus/>
+            <FormControl placeholder="Search notes" autoFocus
+                         value={searchTerm}
+                         onChange={(evt) => setSearchTerm(evt.target.value)}/>
             <div className="m-5 text-muted">
                 <SearchResultList
                     notes={notes}

@@ -5,7 +5,7 @@ import useSWR from "swr";
 
 export function useSearchResultQuery(searchTerm: string): SearchQueryResult {
     const {data, error, isLoading} = useSWR<NoteSearchPreview[]>(
-        "/api/notes/search?searchTerm=" + searchTerm ,
+        () => searchTerm !== "" ? "/api/notes/search?searchTerm=" + searchTerm : null,
         fetcher
     );
 
