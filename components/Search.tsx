@@ -65,9 +65,9 @@ export default function Search(props: {
     };
 
     const [searchTerm, setSearchTerm] = useState("");
-    const searchResult: SearchQueryResult = useSearchResultQuery(searchTerm);
+    const {notes, error} = useSearchResultQuery(searchTerm);
 
-    if (searchResult.error) {
+    if (error) {
         //TODO: error handling
     }
 
@@ -76,7 +76,7 @@ export default function Search(props: {
             <FormControl  onChange={(evt) => setSearchTerm(evt.target.value)} placeholder="Search notes" autoFocus/>
             <div className="m-5 text-muted">
                 <SearchResultList
-                    notes={searchResult.notes}
+                    notes={notes}
                     onNoteSelectChange={handleNoteSelectChange}/>
             </div>
         </>

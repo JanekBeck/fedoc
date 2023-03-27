@@ -14,8 +14,9 @@ function convertToNotePreview(notes: Note[], searchTerm: string): NoteSearchPrev
 }
 
 export default async function handle(req: NextApiRequest, res: NextApiResponse) {
-    let searchTerm = "*"
-    if (req.query.searchTerm && typeof req.query.searchTerm === "string") {
+    const searchTermIsNotEmpty = req.query.searchTerm
+    let searchTerm = undefined
+    if (searchTermIsNotEmpty && typeof req.query.searchTerm === "string") {
         searchTerm = req.query.searchTerm
     }
 
@@ -38,7 +39,8 @@ export default async function handle(req: NextApiRequest, res: NextApiResponse) 
                         ]
                     },
                 })
-                res.json(convertToNotePreview(myNotes, searchTerm));
+
+                res.json(convertToNotePreview(myNotes, searchTerm ?? ""));
                 break;
             }
         }
